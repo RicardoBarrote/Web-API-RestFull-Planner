@@ -57,10 +57,27 @@ public class TripController {
            rawTrip.setDestination(payLoad.destination());
 
            this.tripRepository.save(rawTrip);
-           return ResponseEntity.ok().body(rawTrip);
+           return ResponseEntity.ok(rawTrip);
        }
 
        return ResponseEntity.notFound().build();
     };
+
+    @GetMapping("/{id}/confirm")
+    public ResponseEntity<Trip> confirmTrip (@PathVariable UUID id) {
+        Optional<Trip> trip = this.tripRepository.findById(id);
+
+        if (trip.isPresent()) {
+            Trip rawTrip = trip.get();
+            rawTrip.setConfirmed(true);
+
+            this.tripRepository.save(rawTrip);
+            this.participantService.triggerConfirmationEmailToParticipant(id);
+
+            return ResponseEntity.ok(rawTrip);
+        }
+        return ResponseEntity.notFound().build();
+    };
+
 
 }
