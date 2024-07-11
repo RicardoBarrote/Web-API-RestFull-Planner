@@ -3,9 +3,11 @@ package com.rocketseat.planner.trip;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Entity
+@Table(name = "trips")
 public class Trip {
 
     @Id
@@ -39,6 +41,15 @@ public class Trip {
         this.isConfirmed = isConfirmed;
         this.ownerName = ownerName;
         this.ownerEmail = ownerEmail;
+    }
+
+    public Trip(TripRequestPayLoad data) {
+        this.destination = data.destination();
+        this.isConfirmed = false;
+        this.ownerEmail = data.owner_email();
+        this.ownerName = data.owner_email();
+        this.startsAt = LocalDateTime.parse(data.starts_at(), DateTimeFormatter.ISO_DATE_TIME);
+        this.endsAt = LocalDateTime.parse(data.starts_at(), DateTimeFormatter.ISO_DATE_TIME);
     }
 
     public UUID getId() {
