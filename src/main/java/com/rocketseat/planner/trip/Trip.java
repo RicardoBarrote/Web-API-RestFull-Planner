@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -32,6 +33,11 @@ public class Trip {
     @Column(name = "owner_email", nullable = false)
     private String ownerEmail;
 
+
+    public Trip() {
+        super();
+    }
+
     public Trip(UUID id, String destination, LocalDateTime startsAt, LocalDateTime endsAt, Boolean isConfirmed, String ownerName, String ownerEmail) {
         super();
         this.id = id;
@@ -44,6 +50,7 @@ public class Trip {
     }
 
     public Trip(TripRequestPayLoad data) {
+        super();
         this.destination = data.destination();
         this.isConfirmed = false;
         this.ownerEmail = data.owner_email();
@@ -106,5 +113,18 @@ public class Trip {
 
     public void setOwnerEmail(String ownerEmail) {
         this.ownerEmail = ownerEmail;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Trip trip = (Trip) o;
+        return Objects.equals(id, trip.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

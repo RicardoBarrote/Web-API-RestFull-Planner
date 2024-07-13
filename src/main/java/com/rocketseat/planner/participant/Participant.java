@@ -3,6 +3,7 @@ package com.rocketseat.planner.participant;
 import com.rocketseat.planner.trip.Trip;
 import jakarta.persistence.*;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -27,9 +28,19 @@ public class Participant {
     private Trip trip;
 
     public Participant () {
+        super();
+    }
+
+    public Participant(String email, Trip trip) {
+        super();
+        this.email = email;
+        this.trip = trip;
+        this.isConfirmed = false;
+        this.name = "";
     }
 
     public Participant(UUID id, String name, String email, Boolean isConfirmed) {
+        super();
         this.id = id;
         this.name = name;
         this.email = email;
@@ -66,5 +77,26 @@ public class Participant {
 
     public void setConfirmed(Boolean confirmed) {
         isConfirmed = confirmed;
+    }
+
+    public Trip getTrip() {
+        return trip;
+    }
+
+    public void setTrip(Trip trip) {
+        this.trip = trip;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Participant that = (Participant) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
