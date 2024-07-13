@@ -4,7 +4,11 @@ import com.rocketseat.planner.activity.ActivityData;
 import com.rocketseat.planner.activity.ActivityRequestPayLoad;
 import com.rocketseat.planner.activity.ActivityResponse;
 import com.rocketseat.planner.activity.ActivityService;
+import com.rocketseat.planner.link.LinkRequestPayLoad;
+import com.rocketseat.planner.link.LinkResponse;
+import com.rocketseat.planner.link.LinkService;
 import com.rocketseat.planner.participant.*;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +25,14 @@ public class TripController {
 
     @Autowired
     private ParticipantService participantService;
-
     @Autowired
     private TripRepository tripRepository;
-
     @Autowired
-    ActivityService activityService;
+    private ActivityService activityService;
+    @Autowired
+    private LinkService linkService;
+
+    //REQUISIÇÕES HTTP PARA TRIP ↓↓
 
     @PostMapping
     public ResponseEntity<TripCreateResponse> createTrip(@RequestBody TripRequestPayLoad payload) {
@@ -77,6 +83,8 @@ public class TripController {
         return ResponseEntity.notFound().build();
     }
 
+    //REQUISIÇÕES HTTP PARA ACTIVITY ↓↓
+
     @PostMapping("/{id}/activities")
     public ResponseEntity<ActivityResponse> registerActivity(@PathVariable UUID id, @RequestBody ActivityRequestPayLoad payLoad){
         Optional<Trip> trip = this.tripRepository.findById(id);
@@ -96,6 +104,7 @@ public class TripController {
         return ResponseEntity.ok(activityDataList);
     }
 
+    //REQUISIÇÕES HTTP PARA PARTICIPANT ↓↓
 
     @PostMapping("/{id}/invite")
     public ResponseEntity<ParticipantCreateResponse> inviteParticipant(@PathVariable UUID id, @RequestBody ParticipantRequestPayLoad payLoad) {
@@ -118,6 +127,21 @@ public class TripController {
         List<ParticipantData> particpantList = this.participantService.getAllParticipantsFromEvent(id);
 
         return ResponseEntity.ok(particpantList);
+    }
+
+    //REQUISIÇÕES HTTP PARA LINK ↓↓
+
+    @PostMapping("/{id}/links")
+    public ResponseEntity<LinkResponse> registerLink(@PathVariable UUID id, @RequestBody LinkRequestPayLoad payLoad) {
+        Optional<Trip> trip = this.tripRepository.findById(id);
+
+        if (trip.isPresent()){
+            Trip rawTrip = trip.get();
+
+            LinkResponse linkResponse = this.linkService.registerLink(payLoad, rawTrip);
+            return ResponseEntity.ok(linkResponse);
+        }
+        return ResponseEntity.notFound().build();
     }
 
 

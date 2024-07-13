@@ -35,6 +35,12 @@ public class Link {
         this.trip = trip;
     }
 
+    public Link(String title, String url, Trip trip) {
+        this.title = title;
+        this.url = url;
+        this.trip = trip;
+    }
+
     public String getUrl() {
         return url;
     }
