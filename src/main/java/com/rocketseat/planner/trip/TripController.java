@@ -1,11 +1,10 @@
 package com.rocketseat.planner.trip;
 
-import com.rocketseat.planner.activities.ActivityData;
-import com.rocketseat.planner.activities.ActivityRequestPayLoad;
-import com.rocketseat.planner.activities.ActivityResponse;
-import com.rocketseat.planner.activities.ActivityService;
+import com.rocketseat.planner.activity.ActivityData;
+import com.rocketseat.planner.activity.ActivityRequestPayLoad;
+import com.rocketseat.planner.activity.ActivityResponse;
+import com.rocketseat.planner.activity.ActivityService;
 import com.rocketseat.planner.participant.*;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
