@@ -37,4 +37,5 @@ public class ParticipantService {
                 .stream()
                 .map(participant -> new ParticipantData(participant.getId(), participant.getName(), participant.getEmail(), participant.getConfirmed())).toList();
     }
+
 }
