@@ -6,13 +6,10 @@ import com.rocketseat.planner.activity.ActivityResponse;
 import com.rocketseat.planner.activity.ActivityService;
 import com.rocketseat.planner.link.*;
 import com.rocketseat.planner.participant.*;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,7 +32,7 @@ public class TripController {
     //REQUISIÇÕES HTTP PARA TRIP ↓↓
     @PostMapping
     public ResponseEntity<TripCreateResponse> createTrip(@RequestBody TripRequestPayLoad payload) {
-        Trip newTrip = this.tripService.createTrip(payload);
+        Trip newTrip = this.tripService.postCreateTrip(payload);
 
         this.participantService.registerParticipantsToEvent(payload.emails_to_invite(), newTrip);
         return ResponseEntity.ok(new TripCreateResponse(newTrip.getId()));
@@ -43,8 +40,8 @@ public class TripController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Trip> getTripDetails(@PathVariable UUID id) {
-        Optional<Trip> trip = this.tripService.tripDetails(id);
-        return trip.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Trip trip = this.tripService.getTripDetails(id);
+        return ResponseEntity.ok(trip);
     }
 
     @PutMapping("/{id}")

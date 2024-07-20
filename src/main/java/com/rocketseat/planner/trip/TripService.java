@@ -1,8 +1,11 @@
 package com.rocketseat.planner.trip;
 
+import com.rocketseat.planner.controller.exceptions.ResourceExceptionHandler;
+import com.rocketseat.planner.exceptions.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -14,15 +17,17 @@ public class TripService {
     @Autowired
     private TripRepository tripRepository;
 
-    public Trip createTrip(TripRequestPayLoad payLoad) {
+    public Trip postCreateTrip(TripRequestPayLoad payLoad) {
+
         Trip newTrip = new Trip(payLoad);
         this.tripRepository.save(newTrip);
 
         return newTrip;
     }
 
-    public Optional<Trip> tripDetails(UUID tripId) {
-        return this.tripRepository.findById(tripId);
+    public Trip getTripDetails(UUID tripId) {
+        Optional<Trip> newTrip = tripRepository.findById(tripId);
+        return newTrip.orElseThrow(() -> new NoSuchElementException(tripId));
     }
 
     public Trip updateTrip(UUID id, TripRequestPayLoad payLoad) {
@@ -37,7 +42,7 @@ public class TripService {
         return rawTrip;
     }
 
-    public Trip confirmTrip (UUID id){
+    public Trip confirmTrip(UUID id) {
         Optional<Trip> newTrip = this.tripRepository.findById(id);
         Trip rawTrip = newTrip.get();
 
