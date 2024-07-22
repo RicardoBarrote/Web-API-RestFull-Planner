@@ -1,11 +1,9 @@
 package com.rocketseat.planner.trip;
 
-import com.rocketseat.planner.controller.exceptions.ResourceExceptionHandler;
 import com.rocketseat.planner.exceptions.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;

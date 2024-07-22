@@ -4,6 +4,7 @@ import com.rocketseat.planner.activity.ActivityData;
 import com.rocketseat.planner.activity.ActivityRequestPayLoad;
 import com.rocketseat.planner.activity.ActivityResponse;
 import com.rocketseat.planner.activity.ActivityService;
+import com.rocketseat.planner.controller.exceptions.NullPointerException;
 import com.rocketseat.planner.link.*;
 import com.rocketseat.planner.participant.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,8 +76,8 @@ public class TripController {
 
         if (trip.isPresent()) {
             Trip rawTrip = trip.get();
-
             ActivityResponse activityResponse = this.activityService.registerActivity(payLoad, rawTrip);
+
             return ResponseEntity.ok(activityResponse);
         }
         return ResponseEntity.notFound().build();

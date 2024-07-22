@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class ResourceExceptionHandler {
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<StandardError> noSuchElementException (NoSuchElementException e){
+    public ResponseEntity<StandardError> noSuchElementException(NoSuchElementException e) {
 
         String error = "Resource not found. ";
         HttpStatus status = HttpStatus.NOT_FOUND;
@@ -20,4 +20,15 @@ public class ResourceExceptionHandler {
 
         return ResponseEntity.status(status).body(standardError);
     }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<StandardError> nullPointerException (NullPointerException e){
+
+        String error = "Campo obrigatório não pode estar vazio.";
+        HttpStatus status = HttpStatus.CONFLICT;
+        StandardError standardError = new StandardError(LocalDateTime.now(), status.value(), error, e.getMessage());
+
+        return ResponseEntity.status(status).body(standardError);
+    }
+
 }

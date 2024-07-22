@@ -1,4 +1,6 @@
 package com.rocketseat.planner.activity;
 
-public record ActivityRequestPayLoad(String title, String occurs_at) {
+import java.time.LocalDateTime;
+
+public record ActivityRequestPayLoad(String title, LocalDateTime occurs_at) {
 }
