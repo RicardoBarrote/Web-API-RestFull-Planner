@@ -38,12 +38,13 @@ public class Participant {
         this.name = "";
     }
 
-    public Participant(UUID id, String name, String email, Boolean isConfirmed) {
+    public Participant(UUID id, String name, String email, Boolean isConfirmed, Trip trip) {
         super();
         this.id = id;
         this.name = name;
         this.email = email;
         this.isConfirmed = isConfirmed;
+        this.trip = trip;
     }
 
     public UUID getId() {

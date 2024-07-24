@@ -21,15 +21,14 @@ public class TripService {
     public Trip postCreateTrip(TripRequestPayLoad payLoad) {
         Trip newTrip = new Trip(payLoad);
 
-        if (payLoad.destination()==null || payLoad.starts_at()==null || payLoad.ends_at()==null || payLoad.owner_email()==null || payLoad.owner_name()==null){
+        if (payLoad.destination() == null || payLoad.starts_at() == null || payLoad.ends_at() == null || payLoad.owner_email() == null || payLoad.owner_name() == null) {
             throw new NullPointerException("All fields are mandatory");
         }
 
-        if (payLoad.starts_at().isAfter(payLoad.ends_at()) || payLoad.ends_at().isBefore(payLoad.starts_at())){
+        if (payLoad.starts_at().isAfter(payLoad.ends_at()) || payLoad.ends_at().isBefore(payLoad.starts_at())) {
             throw new DateTimeException("Check the dates");
 
         }
-
         this.tripRepository.save(newTrip);
         return newTrip;
     }
@@ -41,23 +40,36 @@ public class TripService {
 
     public Trip updateTrip(UUID id, TripRequestPayLoad payLoad) {
         Optional<Trip> newTrip = this.tripRepository.findById(id);
-        Trip rawTrip = newTrip.get();
+        if (newTrip.isPresent()) {
+            Trip rawTrip = newTrip.get();
 
-        rawTrip.setEndsAt(payLoad.ends_at());
-        rawTrip.setStartsAt(payLoad.starts_at());
-        rawTrip.setDestination(payLoad.destination());
+            rawTrip.setStartsAt(payLoad.starts_at());
+            rawTrip.setEndsAt(payLoad.ends_at());
+            rawTrip.setDestination(payLoad.destination());
 
-        this.tripRepository.save(rawTrip);
-        return rawTrip;
+            if (payLoad.starts_at().isAfter(payLoad.ends_at()) || payLoad.ends_at().isBefore(payLoad.starts_at())) {
+                throw new DateTimeException("Check the dates");
+            }
+            if (payLoad.destination() == null) {
+                throw new NullPointerException("Fill in the destination");
+            }
+            this.tripRepository.save(rawTrip);
+            return rawTrip;
+        }
+        throw new NoSuchElementException(id);
     }
+
+
 
     public Trip confirmTrip(UUID id) {
         Optional<Trip> newTrip = this.tripRepository.findById(id);
-        Trip rawTrip = newTrip.get();
+        if (newTrip.isPresent()) {
+            Trip rawTrip = newTrip.get();
+            rawTrip.setConfirmed(true);
 
-        rawTrip.setConfirmed(true);
-
-        this.tripRepository.save(rawTrip);
-        return rawTrip;
+            this.tripRepository.save(rawTrip);
+            return rawTrip;
+        }
+        throw new NoSuchElementException(id);
     }
 }

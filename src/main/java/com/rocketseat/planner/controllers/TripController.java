@@ -43,49 +43,33 @@ public class TripController {
 
     //REQUISIÇÕES HTTP PARA TRIP ↓↓
 
-
     @PostMapping
     public ResponseEntity<TripCreateResponse> createTrip(@RequestBody TripRequestPayLoad payload) {
         Trip newTrip = this.tripService.postCreateTrip(payload);
         return ResponseEntity.ok(new TripCreateResponse(newTrip.getId()));
     }
 
-    //Recuperar detalhes da viagem, FALTA PENDURAR AS ATIVIDADES E TRATAR EXCEÇÕES.
     @GetMapping("/{id}")
     public ResponseEntity<Trip> getTripDetails(@PathVariable UUID id) {
         Trip trip = this.tripService.getTripDetails(id);
         return ResponseEntity.ok(trip);
     }
 
-    //Atualizar dados da viagem, FALTA TRATAR EXCEÇÕES.
     @PutMapping("/{id}")
     public ResponseEntity<Trip> updateTrip(@PathVariable UUID id, @RequestBody TripRequestPayLoad payLoad) {
-        Optional<Trip> trip = this.tripRepository.findById(id);
-
-        if (trip.isPresent()) {
-            Trip newTrip = this.tripService.updateTrip(id, payLoad);
-            return ResponseEntity.ok(newTrip);
-        }
-        return ResponseEntity.notFound().build();
+        Trip newTrip = this.tripService.updateTrip(id, payLoad);
+        return ResponseEntity.ok(newTrip);
     }
 
-    //Confirmar viagem, FALTA TRATAR EXCEÇÕES.
     @GetMapping("/{id}/confirm")
     public ResponseEntity<Trip> confirmTrip(@PathVariable UUID id) {
-        Optional<Trip> trip = this.tripRepository.findById(id);
-
-        if (trip.isPresent()) {
-            Trip newTrip = this.tripService.confirmTrip(id);
-            this.participantService.triggerConfirmationEmailToParticipant(id);
-
-            return ResponseEntity.ok(newTrip);
-        }
-        return ResponseEntity.notFound().build();
+        Trip newTrip = this.tripService.confirmTrip(id);
+        this.participantService.triggerConfirmationEmailToParticipant(id);
+        return ResponseEntity.ok(newTrip);
     }
 
     //REQUISIÇÕES HTTP PARA ACTIVITY ↓↓
 
-    //Registrar atividade, OK.
     @PostMapping("/{id}/activities")
     public ResponseEntity<ActivityResponse> registerActivity(@PathVariable UUID id, @RequestBody ActivityRequestPayLoad payLoad) {
         Optional<Trip> trip = this.tripRepository.findById(id);
@@ -99,7 +83,6 @@ public class TripController {
         throw new NoSuchElementException(id);
     }
 
-    //Pegar todas as atividades da viagem
     @GetMapping("/{id}/activities")
     public ResponseEntity<List<Activity>> getAllActivities(@PathVariable UUID id) {
         List<Activity> activityList = this.activityService.getAllActivitiesFromId(id);
@@ -120,7 +103,7 @@ public class TripController {
             }
             return ResponseEntity.ok(participantCreateResponse);
         }
-        return ResponseEntity.notFound().build();
+        throw new NoSuchElementException(id);
     }
 
     @GetMapping("/{id}/participants")

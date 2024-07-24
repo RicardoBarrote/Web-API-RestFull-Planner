@@ -23,11 +23,8 @@ public class ActivityService {
     public ActivityResponse registerActivity(ActivityRequestPayLoad payLoad, Trip trip) {
         Activity newActivity = new Activity(payLoad.title(), payLoad.occurs_at(), trip);
 
-        if (payLoad.occurs_at() == null) {
-            throw new NullPointerException("Data é um campo obrigatório");
-        }
-        if (payLoad.title() == null) {
-            throw new NullPointerException("Login é um campo obrigatório");
+        if (payLoad.occurs_at() == null || payLoad.title()==null) {
+            throw new NullPointerException("Date and title are mandatory fields");
         }
         this.activityRepository.save(newActivity);
         return new ActivityResponse(newActivity.getId());
