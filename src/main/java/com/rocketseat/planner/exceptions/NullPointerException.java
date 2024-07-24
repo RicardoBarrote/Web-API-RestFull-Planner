@@ -1,4 +1,4 @@
-package com.rocketseat.planner.controller.exceptions;
+package com.rocketseat.planner.exceptions;
 
 public class NullPointerException extends RuntimeException{
 

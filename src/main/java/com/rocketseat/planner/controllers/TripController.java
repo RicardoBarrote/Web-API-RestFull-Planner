@@ -1,12 +1,23 @@
-package com.rocketseat.planner.trip;
+package com.rocketseat.planner.controllers;
 
-import com.rocketseat.planner.activity.ActivityData;
-import com.rocketseat.planner.activity.ActivityRequestPayLoad;
-import com.rocketseat.planner.activity.ActivityResponse;
-import com.rocketseat.planner.activity.ActivityService;
-import com.rocketseat.planner.controller.exceptions.NullPointerException;
-import com.rocketseat.planner.link.*;
-import com.rocketseat.planner.participant.*;
+import com.rocketseat.planner.entitys.Activity;
+import com.rocketseat.planner.entitys.Link;
+import com.rocketseat.planner.entitys.Participant;
+import com.rocketseat.planner.entitys.Trip;
+import com.rocketseat.planner.exceptions.NoSuchElementException;
+import com.rocketseat.planner.repositorys.TripRepository;
+import com.rocketseat.planner.requestPayLoads.ActivityRequestPayLoad;
+import com.rocketseat.planner.requestPayLoads.LinkRequestPayLoad;
+import com.rocketseat.planner.requestPayLoads.ParticipantRequestPayLoad;
+import com.rocketseat.planner.requestPayLoads.TripRequestPayLoad;
+import com.rocketseat.planner.responses.ActivityResponse;
+import com.rocketseat.planner.responses.LinkResponse;
+import com.rocketseat.planner.responses.ParticipantCreateResponse;
+import com.rocketseat.planner.responses.TripCreateResponse;
+import com.rocketseat.planner.services.ActivityService;
+import com.rocketseat.planner.services.LinkService;
+import com.rocketseat.planner.services.ParticipantService;
+import com.rocketseat.planner.services.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,20 +42,22 @@ public class TripController {
     private TripService tripService;
 
     //REQUISIÇÕES HTTP PARA TRIP ↓↓
+
+
     @PostMapping
     public ResponseEntity<TripCreateResponse> createTrip(@RequestBody TripRequestPayLoad payload) {
         Trip newTrip = this.tripService.postCreateTrip(payload);
-
-        this.participantService.registerParticipantsToEvent(payload.emails_to_invite(), newTrip);
         return ResponseEntity.ok(new TripCreateResponse(newTrip.getId()));
     }
 
+    //Recuperar detalhes da viagem, FALTA PENDURAR AS ATIVIDADES E TRATAR EXCEÇÕES.
     @GetMapping("/{id}")
     public ResponseEntity<Trip> getTripDetails(@PathVariable UUID id) {
         Trip trip = this.tripService.getTripDetails(id);
         return ResponseEntity.ok(trip);
     }
 
+    //Atualizar dados da viagem, FALTA TRATAR EXCEÇÕES.
     @PutMapping("/{id}")
     public ResponseEntity<Trip> updateTrip(@PathVariable UUID id, @RequestBody TripRequestPayLoad payLoad) {
         Optional<Trip> trip = this.tripRepository.findById(id);
@@ -56,6 +69,7 @@ public class TripController {
         return ResponseEntity.notFound().build();
     }
 
+    //Confirmar viagem, FALTA TRATAR EXCEÇÕES.
     @GetMapping("/{id}/confirm")
     public ResponseEntity<Trip> confirmTrip(@PathVariable UUID id) {
         Optional<Trip> trip = this.tripRepository.findById(id);
@@ -70,6 +84,8 @@ public class TripController {
     }
 
     //REQUISIÇÕES HTTP PARA ACTIVITY ↓↓
+
+    //Registrar atividade, OK.
     @PostMapping("/{id}/activities")
     public ResponseEntity<ActivityResponse> registerActivity(@PathVariable UUID id, @RequestBody ActivityRequestPayLoad payLoad) {
         Optional<Trip> trip = this.tripRepository.findById(id);
@@ -80,13 +96,14 @@ public class TripController {
 
             return ResponseEntity.ok(activityResponse);
         }
-        return ResponseEntity.notFound().build();
+        throw new NoSuchElementException(id);
     }
 
+    //Pegar todas as atividades da viagem
     @GetMapping("/{id}/activities")
-    public ResponseEntity<List<ActivityData>> getAllActivities(@PathVariable UUID id) {
-        List<ActivityData> activityDataList = this.activityService.getAllActivitiesFromId(id);
-        return ResponseEntity.ok(activityDataList);
+    public ResponseEntity<List<Activity>> getAllActivities(@PathVariable UUID id) {
+        List<Activity> activityList = this.activityService.getAllActivitiesFromId(id);
+        return ResponseEntity.ok(activityList);
     }
 
     //REQUISIÇÕES HTTP PARA PARTICIPANT ↓↓
@@ -107,9 +124,8 @@ public class TripController {
     }
 
     @GetMapping("/{id}/participants")
-    public ResponseEntity<List<ParticipantData>> getAllParticipant(@PathVariable UUID id) {
-        List<ParticipantData> particpantList = this.participantService.getAllParticipantsFromEvent(id);
-
+    public ResponseEntity<List<Participant>> getAllParticipant(@PathVariable UUID id) {
+        List<Participant> particpantList = this.participantService.getAllParticipantsFromEvent(id);
         return ResponseEntity.ok(particpantList);
     }
 
@@ -124,14 +140,12 @@ public class TripController {
             LinkResponse linkResponse = this.linkService.registerLink(payLoad, rawTrip);
             return ResponseEntity.ok(linkResponse);
         }
-        return ResponseEntity.notFound().build();
+        throw new NoSuchElementException(id);
     }
 
     @GetMapping("/{id}/links")
-    public ResponseEntity<List<LinkData>> getAllLinks(@PathVariable UUID id) {
-        List<LinkData> linkData = this.linkService.getAllLinksFromTrip(id);
-
+    public ResponseEntity<List<Link>> getAllLinks(@PathVariable UUID id) {
+        List<Link> linkData = this.linkService.getAllLinksFromTrip(id);
         return ResponseEntity.ok(linkData);
     }
-
 }

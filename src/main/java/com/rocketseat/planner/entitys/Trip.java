@@ -1,9 +1,10 @@
-package com.rocketseat.planner.trip;
+package com.rocketseat.planner.entitys;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.rocketseat.planner.requestPayLoads.TripRequestPayLoad;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -18,9 +19,11 @@ public class Trip {
     @Column(nullable = false)
     private String destination;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     @Column(name = "starts_at", nullable = false)
     private LocalDateTime startsAt;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     @Column(name = "ends_at", nullable = false)
     private LocalDateTime endsAt;
 
@@ -55,8 +58,8 @@ public class Trip {
         this.isConfirmed = false;
         this.ownerEmail = data.owner_email();
         this.ownerName = data.owner_email();
-        this.startsAt = LocalDateTime.parse(data.starts_at(), DateTimeFormatter.ISO_DATE_TIME);
-        this.endsAt = LocalDateTime.parse(data.starts_at(), DateTimeFormatter.ISO_DATE_TIME);
+        this.startsAt = data.starts_at();
+        this.endsAt = data.ends_at();
     }
 
     public UUID getId() {

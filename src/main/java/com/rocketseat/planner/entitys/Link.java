@@ -1,23 +1,20 @@
-package com.rocketseat.planner.activity;
+package com.rocketseat.planner.entitys;
 
-import com.rocketseat.planner.trip.Trip;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "activities")
-public class Activity {
+@Table(name = "links")
+public class Link {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "occurs_at", nullable = false)
-    private LocalDateTime occursAt;
+    @Column(nullable = false)
+    private String url;
 
     @Column(nullable = false)
     private String title;
@@ -26,40 +23,31 @@ public class Activity {
     @JoinColumn(name = "trip_id", nullable = false)
     private Trip trip;
 
-    public Activity() {
+    public Link(){
         super();
     }
 
-    public Activity(UUID id, LocalDateTime occursAt, String title, Trip trip) {
+    public Link(UUID id, String url, String title, Trip trip) {
+        super();
         this.id = id;
-        this.occursAt = occursAt;
+        this.url = url;
         this.title = title;
         this.trip = trip;
     }
 
-    public Activity(String title, LocalDateTime occursAt, Trip trip) {
-
+    public Link(String title, String url, Trip trip) {
+        super();
         this.title = title;
-        this.occursAt = occursAt;//LocalDateTime.parse(occursAt, DateTimeFormatter.ISO_DATE_TIME);
+        this.url = url;
         this.trip = trip;
-
     }
 
-
-    public UUID getId() {
-        return id;
+    public String getUrl() {
+        return url;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getOccursAt() {
-        return occursAt;
-    }
-
-    public void setOccursAt(LocalDateTime occursAt) {
-        this.occursAt = occursAt;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public Trip getTrip() {
@@ -78,12 +66,20 @@ public class Activity {
         this.title = title;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Activity activity = (Activity) o;
-        return Objects.equals(id, activity.id);
+        Link link = (Link) o;
+        return Objects.equals(id, link.id);
     }
 
     @Override

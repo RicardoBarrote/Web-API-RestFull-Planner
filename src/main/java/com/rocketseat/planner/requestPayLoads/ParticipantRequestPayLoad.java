@@ -1,4 +1,4 @@
-package com.rocketseat.planner.participant;
+package com.rocketseat.planner.requestPayLoads;
 
 public record ParticipantRequestPayLoad(String name, String email) {
 }

@@ -1,5 +1,6 @@
-package com.rocketseat.planner.link;
+package com.rocketseat.planner.repositorys;
 
+import com.rocketseat.planner.entitys.Link;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

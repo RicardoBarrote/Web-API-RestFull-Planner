@@ -1,6 +1,5 @@
-package com.rocketseat.planner.participant;
+package com.rocketseat.planner.entitys;
 
-import com.rocketseat.planner.trip.Trip;
 import jakarta.persistence.*;
 
 import java.util.Objects;

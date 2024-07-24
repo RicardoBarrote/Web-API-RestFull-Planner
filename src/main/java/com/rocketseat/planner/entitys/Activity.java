@@ -1,21 +1,21 @@
-package com.rocketseat.planner.link;
+package com.rocketseat.planner.entitys;
 
-import com.rocketseat.planner.trip.Trip;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "links")
-public class Link {
+@Table(name = "activities")
+public class Activity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(nullable = false)
-    private String url;
+    @Column(name = "occurs_at", nullable = false)
+    private LocalDateTime occursAt;
 
     @Column(nullable = false)
     private String title;
@@ -24,30 +24,45 @@ public class Link {
     @JoinColumn(name = "trip_id", nullable = false)
     private Trip trip;
 
-    public Link(){
+    public Activity() {
         super();
     }
 
-    public Link(UUID id, String url, String title, Trip trip) {
-        super();
+    public Activity(UUID id, LocalDateTime occursAt, String title, Trip trip) {
         this.id = id;
-        this.url = url;
+        this.occursAt = occursAt;
         this.title = title;
         this.trip = trip;
     }
 
-    public Link(String title, String url, Trip trip) {
+    public Activity(String title, LocalDateTime occursAt, Trip trip) {
+
         this.title = title;
-        this.url = url;
+        this.occursAt = occursAt;
         this.trip = trip;
     }
 
-    public String getUrl() {
-        return url;
+    public Activity(UUID id, String title, LocalDateTime occursAt) {
+        this.id = id;
+        this.title = title;
+        this.occursAt = occursAt;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getOccursAt() {
+        return occursAt;
+    }
+
+    public void setOccursAt(LocalDateTime occursAt) {
+        this.occursAt = occursAt;
     }
 
     public Trip getTrip() {
@@ -66,20 +81,12 @@ public class Link {
         this.title = title;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Link link = (Link) o;
-        return Objects.equals(id, link.id);
+        Activity activity = (Activity) o;
+        return Objects.equals(id, activity.id);
     }
 
     @Override

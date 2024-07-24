@@ -1,4 +1,4 @@
-package com.rocketseat.planner.link;
+package com.rocketseat.planner.requestPayLoads;
 
 public record LinkRequestPayLoad(String title, String url) {
 }

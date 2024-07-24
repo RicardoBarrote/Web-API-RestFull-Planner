@@ -1,4 +1,4 @@
-package com.rocketseat.planner.link;
+package com.rocketseat.planner.responses;
 
 import java.util.UUID;
 
